@@ -1,0 +1,14 @@
+//
+// Created by 10122 on 29.05.2024.
+//
+
+#ifndef GRAPHEFFICIENCY_GRAPHSALGOS_H
+#define GRAPHEFFICIENCY_GRAPHSALGOS_H
+
+
+class GraphsAlgos {
+
+};
+
+
+#endif //GRAPHEFFICIENCY_GRAPHSALGOS_H
