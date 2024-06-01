@@ -9,14 +9,21 @@
 class SimulationOptions {
 public:
     static void runMenu();
+
 private:
-
-    static void loadGraphFromFile();
-
-    static void printAdjacencyMatrix();
-
-    static void printAdjacencyList();
+    void displayMainMenu();
+    void handleMainMenuChoice(int choice);
+    void displayMSTMenu();
+    void handleMSTChoice(int choice);
+    void displayShortestPathMenu();
+    void handleShortestPathChoice(int choice);
+    void displayMaxFlowMenu();
+    void handleMaxFlowChoice(int choice);
+    void loadGraph();
+    void generateRandomGraph();
+    void printGraph();
 };
+
 
 
 #endif //GRAPHEFFICIENCY_SIMULATIONOPTIONS_H

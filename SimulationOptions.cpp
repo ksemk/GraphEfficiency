@@ -3,23 +3,12 @@
 //
 
 #include "SimulationOptions.h"
+#include "GraphsGenerating.h"
+#include "GraphsAlgorithms.h"
 #include <iostream>
-#include <chrono>
 
 using namespace std;
-using namespace chrono;
 int menuchoice;
-char **adjMatrix; // Macierz sąsiedztwa
-int numVertices; // Liczba wierzchołków
-int numEdges; // Liczba krawędzi
-
-// Typy dla dynamicznej tablicy list sąsiedztwa
-struct slistEl {
-    slistEl *next;
-    int v;
-};
-slistEl **adjList; // Lista sąsiedztwa
-const char* DIRECTORY_PATH = "C:\\Users\\10122\\CLionProjects\\GraphEfficiency\\resources\\"; // Ścieżka do katalogu z plikami grafów
 
 void SimulationOptions::runMenu() {
     do {
@@ -58,6 +47,7 @@ void SimulationOptions::runMenu() {
                                 cout << "| 1 - Load graph from file                          |" << endl;
                                 cout << "| 2 - Generate random graph                         |" << endl;
                                 cout << "| 3 - Print existed graph                           |" << endl;
+                                cout << "| 4 - Run the algorithm                             |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
                                 cout << "| 0 - Back to the main menu                         |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
@@ -66,15 +56,20 @@ void SimulationOptions::runMenu() {
                                 cout << endl;
                                 switch (menuchoice) {
                                     case 1:
-                                        loadGraphFromFile();
+                                        GraphsGenerating::loadGraphFromFile();
                                         break;
                                     case 2:
                                         cout << "Generating random graph" << endl;
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        printAdjacencyMatrix();
-                                        printAdjacencyList();
+                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printAdjacencyList();
+                                        break;
+                                    case 4:
+                                        cout << "Run Prim's algorithm for computing minimal spanning tree" << endl;
+                                        GraphsAlgorithms::PrimsAlgorithm(GraphsGenerating::adjMatrix,
+                                                                         GraphsGenerating::numVertices);
                                         break;
                                     case 0:
                                         cout << "Back to the main menu" << endl;
@@ -93,6 +88,7 @@ void SimulationOptions::runMenu() {
                                 cout << "| 1 - Load graph from file                          |" << endl;
                                 cout << "| 2 - Generate random graph                         |" << endl;
                                 cout << "| 3 - Print existed graph                           |" << endl;
+                                cout << "| 4 - Run the algorithm                             |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
                                 cout << "| 0 - Back to the main menu                         |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
@@ -101,15 +97,20 @@ void SimulationOptions::runMenu() {
                                 cout << endl;
                                 switch (menuchoice) {
                                     case 1:
-                                        loadGraphFromFile();
+                                        GraphsGenerating::loadGraphFromFile();
                                         break;
                                     case 2:
                                         cout << "Generating random graph" << endl;
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        printAdjacencyMatrix();
-                                        printAdjacencyList();
+                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printAdjacencyList();
+                                        break;
+                                    case 4:
+                                        cout << "Run Kruskal's algorithm for computing minimal spanning tree" << endl;
+                                        GraphsAlgorithms::KruskalsAlgorithm(GraphsGenerating::adjMatrix,
+                                                                            GraphsGenerating::numVertices);
                                         break;
                                     case 0:
                                         cout << "Back to the main menu" << endl;
@@ -151,6 +152,7 @@ void SimulationOptions::runMenu() {
                                 cout << "| 1 - Load graph from file                          |" << endl;
                                 cout << "| 2 - Generate random graph                         |" << endl;
                                 cout << "| 3 - Print existed graph                           |" << endl;
+                                cout << "| 4 - Run the algorithm                             |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
                                 cout << "| 0 - Back to the main menu                         |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
@@ -160,14 +162,20 @@ void SimulationOptions::runMenu() {
                                 switch (menuchoice) {
                                     case 1:
                                         cout << "Load graph from file" << endl;
+                                        GraphsGenerating::loadGraphFromFile();
                                         break;
                                     case 2:
                                         cout << "Generate random graph" << endl;
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        printAdjacencyMatrix();
-                                        printAdjacencyList();
+                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printAdjacencyList();
+                                        break;
+                                    case 4:
+                                        cout << "Run Dijkstra's algorithm for computing shortest path" << endl;
+                                        GraphsAlgorithms::DijkstrasAlgorithm(GraphsGenerating::adjMatrix,
+                                                                             GraphsGenerating::numVertices, 0);
                                         break;
                                     case 0:
                                         cout << "Back to the main menu" << endl;
@@ -186,6 +194,7 @@ void SimulationOptions::runMenu() {
                                 cout << "| 1 - Load graph from file                          |" << endl;
                                 cout << "| 2 - Generate random graph                         |" << endl;
                                 cout << "| 3 - Print existed graph                           |" << endl;
+                                cout << "| 4 - Run the algorithm                             |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
                                 cout << "| 0 - Back to the main menu                         |" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
@@ -195,14 +204,20 @@ void SimulationOptions::runMenu() {
                                 switch (menuchoice) {
                                     case 1:
                                         cout << "Load graph from file" << endl;
+                                        GraphsGenerating::loadGraphFromFile();
                                         break;
                                     case 2:
                                         cout << "Generate random graph" << endl;
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        printAdjacencyMatrix();
-                                        printAdjacencyList();
+                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printAdjacencyList();
+                                        break;
+                                    case 4:
+                                        cout << "Run Bellman-Ford algorithm for computing shortest path" << endl;
+                                        GraphsAlgorithms::BellmanFordAlgorithm(GraphsGenerating::adjMatrix,
+                                                                               GraphsGenerating::numVertices, 0);
                                         break;
                                     case 0:
                                         cout << "Back to the main menu" << endl;
@@ -225,11 +240,10 @@ void SimulationOptions::runMenu() {
             case 3:
                 do {
                     cout << "|---------------------------------------------------|" << endl;
-                    cout << "|    CHOOSE THE OPTIONS MAXIMUM FLOW ALGORITHM      |" << endl;
+                    cout << "|       CHOOSE THE ALGORITHM FOR MAXIMUM FLOW       |" << endl;
                     cout << "|---------------------------------------------------|" << endl;
-                    cout << "| 1 - Load graph from file                          |" << endl;
-                    cout << "| 2 - Generate random graph                         |" << endl;
-                    cout << "| 3 - Print existed graph                           |" << endl;
+                    cout << "| 1 - Ford-Fulkerson algorithm DST                  |" << endl;
+                    cout << "| 2 - Ford-Fulkerson algorithm BST                  |" << endl;
                     cout << "|---------------------------------------------------|" << endl;
                     cout << "| 0 - Back to the main menu                         |" << endl;
                     cout << "|---------------------------------------------------|" << endl;
@@ -238,16 +252,93 @@ void SimulationOptions::runMenu() {
                     cout << endl;
                     switch (menuchoice) {
                         case 1:
-                            cout << "Load graph from file" << endl;
+                            do {
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "| CHOOSE THE OPTION FOR DST FORD-FULKERSON ALGORITHM|" << endl;
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "| 1 - Load graph from file                          |" << endl;
+                                cout << "| 2 - Generate random graph                         |" << endl;
+                                cout << "| 3 - Print existed graph                           |" << endl;
+                                cout << "| 4 - Run the algorithm                             |" << endl;
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "| 0 - Back to the main menu                         |" << endl;
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "Enter your choice: ";
+                                cin >> menuchoice;
+                                cout << endl;
+                                switch (menuchoice) {
+                                    case 1:
+                                        cout << "Load graph from file" << endl;
+                                        GraphsGenerating::loadGraphFromFile();
+                                        break;
+                                    case 2:
+                                        cout << "Generate random graph" << endl;
+                                        break;
+                                    case 3:
+                                        cout << "Print existed graph" << endl;
+                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printAdjacencyList();
+                                        break;
+                                    case 4:
+                                        cout << "Run Ford-Fulkerson algorithm for computing maximum flow" << endl;
+                                        GraphsAlgorithms::FordFulkersonAlgorithmDFS(GraphsGenerating::adjMatrix,
+                                                                                    GraphsGenerating::numVertices, 0,
+                                                                                    GraphsGenerating::numVertices - 1);
+                                        break;
+                                    case 0:
+                                        cout << "Back to the main menu" << endl;
+                                        break;
+                                    default:
+                                        cout << "Invalid choice. Please try again." << endl;
+                                        break;
+                                }
+                            } while (menuchoice != 0);
                             break;
                         case 2:
-                            cout << "Generate random graph" << endl;
-                            break;
-                        case 3:
-                            cout << "Print existed graph" << endl;
+                            do {
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "| CHOOSE THE OPTION FOR BST FORD-FULKERSON ALGORITHM|" << endl;
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "| 1 - Load graph from file                          |" << endl;
+                                cout << "| 2 - Generate random graph                         |" << endl;
+                                cout << "| 3 - Print existed graph                           |" << endl;
+                                cout << "| 4 - Run the algorithm                             |" << endl;
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "| 0 - Back to the main menu                         |" << endl;
+                                cout << "|---------------------------------------------------|" << endl;
+                                cout << "Enter your choice: ";
+                                cin >> menuchoice;
+                                cout << endl;
+                                switch (menuchoice) {
+                                    case 1:
+                                        cout << "Load graph from file" << endl;
+                                        GraphsGenerating::loadGraphFromFile();
+                                        break;
+                                    case 2:
+                                        cout << "Generate random graph" << endl;
+                                        break;
+                                    case 3:
+                                        cout << "Print existed graph" << endl;
+                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printAdjacencyList();
+                                        break;
+                                    case 4:
+                                        cout << "Run Ford-Fulkerson algorithm for computing maximum flow" << endl;
+                                        GraphsAlgorithms::FordFulkersonAlgorithmBFS(GraphsGenerating::adjMatrix,
+                                                                                    GraphsGenerating::numVertices, 0,
+                                                                                    GraphsGenerating::numVertices - 1);
+                                        break;
+                                    case 0:
+                                        cout << "Back to the main menu" << endl;
+                                        break;
+                                    default:
+                                        cout << "Invalid choice. Please try again." << endl;
+                                        break;
+                                }
+                            } while (menuchoice != 0);
                             break;
                         case 0:
-                            cout << "Back to the main menu" << endl;
+                            cout << "Exiting the program..." << endl;
                             break;
                         default:
                             cout << "Invalid choice. Please try again." << endl;
@@ -255,96 +346,6 @@ void SimulationOptions::runMenu() {
                     }
                 } while (menuchoice != 0);
                 break;
-            case 0:
-                cout << "Exiting the program..." << endl;
-                break;
-            default:
-                cout << "Invalid choice. Please try again." << endl;
-                break;
         }
     } while (menuchoice != 0);
-}
-
-
-void SimulationOptions::loadGraphFromFile() {
-    string fileName;
-    string fullPath;
-
-    cout << "Enter the file name to read data from: ";
-    cin >> fileName;
-    cout << endl;
-
-    // Konstrukcja pełnej ścieżki do pliku
-    fullPath = DIRECTORY_PATH + fileName;
-    FILE *inputFile = fopen(fullPath.c_str(), "r");
-
-    // Check if the file exists
-    if (!inputFile) {
-        cout << "Cannot open the file" << endl;
-        return;
-    }
-
-    // Read the number of edges and vertices
-    fscanf(inputFile, "%d %d", &numEdges, &numVertices);
-
-    // Allocate memory for the adjacency matrix
-    adjMatrix = new char*[numVertices];
-    for (int i = 0; i < numVertices; ++i) {
-        adjMatrix[i] = new char[numVertices];
-    }
-
-    // Initialize the adjacency matrix with zeros
-    for (int i = 0; i < numVertices; ++i) {
-        for (int j = 0; j < numVertices; ++j) {
-            adjMatrix[i][j] = 0;
-        }
-    }
-
-    // Allocate memory for the adjacency list
-    adjList = new slistEl*[numVertices];
-    for (int i = 0; i < numVertices; ++i) {
-        adjList[i] = nullptr;
-    }
-
-    int start, end, weight;
-    while (fscanf(inputFile, "%d %d %d", &start, &end, &weight) != EOF) {
-        adjMatrix[start][end] = weight; // Krawędź start->end obecna z wagą
-
-        // Tworzenie nowego elementu listy sąsiedztwa
-        slistEl *p = new slistEl;
-        p->v = end;
-        p->next = adjList[start];
-        adjList[start] = p;
-    }
-
-    // Close the file
-    fclose(inputFile);
-}
-
-void SimulationOptions::printAdjacencyMatrix() {
-    // Print adjacency matrix
-    cout << "Adjacency Matrix:" << endl;
-    cout << "  ";
-    for (int i = 0; i < numVertices; i++) cout << " " << i;
-    cout << endl;
-    for (int i = 0; i < numVertices; i++) {
-        cout << i << "  ";
-        for (int j = 0; j < numVertices; j++) cout << (int) adjMatrix[i][j] << " ";
-        cout << endl;
-    }
-    cout << endl;
-}
-
-void SimulationOptions::printAdjacencyList() {
-    // Print adjacency list
-    cout << "Adjacency List:" << endl;
-    for (int i = 0; i < numVertices; i++) {
-        cout << "A [" << i << "] =";
-        slistEl *p = adjList[i];
-        while (p) {
-            cout << " " << p->v;
-            p = p->next;
-        }
-        cout << endl;
-    }
 }
