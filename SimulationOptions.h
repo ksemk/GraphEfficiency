@@ -11,17 +11,7 @@ public:
     static void runMenu();
 
 private:
-    void displayMainMenu();
-    void handleMainMenuChoice(int choice);
-    void displayMSTMenu();
-    void handleMSTChoice(int choice);
-    void displayShortestPathMenu();
-    void handleShortestPathChoice(int choice);
-    void displayMaxFlowMenu();
-    void handleMaxFlowChoice(int choice);
-    void loadGraph();
-    void generateRandomGraph();
-    void printGraph();
+    static void randomGraphGeneratorMenu();
 };
 
 
