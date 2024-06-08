@@ -19,6 +19,7 @@ private:
 
     static int find(int parent[], int i);
     static void Union(int parent[], int rank[], int x, int y);
+    static void sortEdges(std::vector<Edge>& edges);
 
     static std::vector<Edge> mst; // Store the resulting MST
 };

@@ -1,7 +1,6 @@
 #include "Kruskal.h"
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <chrono>
 
 using namespace std;
@@ -31,6 +30,17 @@ void Kruskal::Union(int parent[], int rank[], int x, int y) {
     }
 }
 
+// Function to sort edges in non-decreasing order of their weight
+void Kruskal::sortEdges(vector<Edge>& edges) {
+    for (size_t i = 0; i < edges.size() - 1; i++) {
+        for (size_t j = 0; j < edges.size() - i - 1; j++) {
+            if (edges[j].weight > edges[j + 1].weight) {
+                swap(edges[j], edges[j + 1]);
+            }
+        }
+    }
+}
+
 int Kruskal::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int numEdges) {
     vector<Edge> edges;
     for (int u = 0; u < numVertices; ++u) {
@@ -41,9 +51,7 @@ int Kruskal::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, in
         }
     }
 
-    sort(edges.begin(), edges.end(), [](const Edge &a, const Edge &b) {
-        return a.weight < b.weight;
-    });
+    sortEdges(edges);
 
     int *parent = new int[numVertices];
     int *rank = new int[numVertices];
@@ -77,15 +85,13 @@ int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, in
     vector<Edge> edges;
     for (int u = 0; u < numVertices; ++u) {
         for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
-            if (u < p->v) {
+            if (u < p->v) { // To avoid duplicates
                 edges.push_back({u, p->v, p->weight});
             }
         }
     }
 
-    sort(edges.begin(), edges.end(), [](const Edge &a, const Edge &b) {
-        return a.weight < b.weight;
-    });
+    sortEdges(edges);
 
     int *parent = new int[numVertices];
     int *rank = new int[numVertices];
@@ -116,25 +122,53 @@ int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, in
 }
 
 void Kruskal::PrintResults(int mstWeight, double elapsed) {
-    cout << "Minimum Spanning Tree Weight: " << mstWeight << endl;
-    cout << "Edge \tWeight\n";
+    printf("Minimum Spanning Tree Weight: %d\n", mstWeight);
+    printf("%-10s %-10s\n", "Edge", "Weight");
     for (const auto& edge : mst)
-        cout << edge.src << " - " << edge.dest << " \t" << edge.weight << " \n";
-    cout << "Elapsed time: " << elapsed << " ms" << endl;
+        printf("%-4d - %-4d \t%-4d\n", edge.src, edge.dest, edge.weight);
+    printf("Elapsed time: %.3f ms\n", elapsed);
 }
 
 void Kruskal::TimeCounterMatrix(int **adjMatrix, int numVertices, int numEdges) {
-    auto start = chrono::high_resolution_clock::now();
-    int mstWeight = AlgorithmCalculationFromMatrix(adjMatrix, numVertices, numEdges);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = end - start;
-    PrintResults(mstWeight, elapsed.count() * 1000);
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        int mstWeight = AlgorithmCalculationFromMatrix(adjMatrix, numVertices, numEdges);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(mstWeight, elapsed.count() * 1000);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 }
 
 void Kruskal::TimeCounterList(slistEl **adjList, int numVertices, int numEdges) {
-    auto start = chrono::high_resolution_clock::now();
-    int mstWeight = AlgorithmCalculationFromList(adjList, numVertices, numEdges);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = end - start;
-    PrintResults(mstWeight, elapsed.count() * 1000);
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        int mstWeight = AlgorithmCalculationFromList(adjList, numVertices, numEdges);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(mstWeight, elapsed.count() * 1000);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 }

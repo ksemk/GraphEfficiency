@@ -5,7 +5,7 @@
 
 using namespace std;
 
-pair<int*, int*> BellmanFord::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int startVertex) {
+pair<int *, int *> BellmanFord::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int startVertex) {
     int *dist = new int[numVertices];
     int *prev = new int[numVertices];
 
@@ -44,7 +44,7 @@ pair<int*, int*> BellmanFord::AlgorithmCalculationFromMatrix(int **adjMatrix, in
     return make_pair(dist, prev);
 }
 
-pair<int*, int*> BellmanFord::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, int startVertex) {
+pair<int *, int *> BellmanFord::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, int startVertex) {
     int *dist = new int[numVertices];
     int *prev = new int[numVertices];
 
@@ -59,7 +59,7 @@ pair<int*, int*> BellmanFord::AlgorithmCalculationFromList(slistEl **adjList, in
     // Relax edges |V| - 1 times
     for (int i = 1; i <= numVertices - 1; i++) {
         for (int u = 0; u < numVertices; u++) {
-            for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
+            for (slistEl *p = adjList[u]; p != nullptr; p = p->next) {
                 int v = p->v;
                 int weight = p->weight;
                 if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
@@ -72,7 +72,7 @@ pair<int*, int*> BellmanFord::AlgorithmCalculationFromList(slistEl **adjList, in
 
     // Check for negative-weight cycles
     for (int u = 0; u < numVertices; u++) {
-        for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
+        for (slistEl *p = adjList[u]; p != nullptr; p = p->next) {
             int v = p->v;
             int weight = p->weight;
             if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
@@ -105,27 +105,52 @@ void BellmanFord::PrintResults(int *dist, int *prev, int numVertices, int startV
 }
 
 void BellmanFord::TimeCounterMatrix(int **adjMatrix, int numVertices, int startVertex) {
-    auto start = chrono::high_resolution_clock::now();
-    pair<int*, int*> results = AlgorithmCalculationFromMatrix(adjMatrix, numVertices, startVertex);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = end - start;
-    PrintResults(results.first, results.second, numVertices, startVertex);
-    cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        pair<int *, int *> results = AlgorithmCalculationFromMatrix(adjMatrix, numVertices, startVertex);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(results.first, results.second, numVertices, startVertex);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+        // Free allocated memory
+        delete[] results.first;
+        delete[] results.second;
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 
-    // Free allocated memory
-    delete[] results.first;
-    delete[] results.second;
 }
 
 void BellmanFord::TimeCounterList(slistEl **adjList, int numVertices, int startVertex) {
-    auto start = chrono::high_resolution_clock::now();
-    pair<int*, int*> results = AlgorithmCalculationFromList(adjList, numVertices, startVertex);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = end - start;
-    PrintResults(results.first, results.second, numVertices, startVertex);
-    cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
-
-    // Free allocated memory
-    delete[] results.first;
-    delete[] results.second;
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        pair<int *, int *> results = AlgorithmCalculationFromList(adjList, numVertices, startVertex);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(results.first, results.second, numVertices, startVertex);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+        // Free allocated memory
+        delete[] results.first;
+        delete[] results.second;
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 }

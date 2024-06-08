@@ -8,9 +8,3 @@ int main() {
     SimulationOptions::runMenu();
     return 0;
 }
-
-
-/* todo:  implement list implementation of each algorithm
- * todo:  random graph generation
- * todo:  implement random graph generation
-*/

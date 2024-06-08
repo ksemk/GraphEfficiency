@@ -9,7 +9,7 @@
 
 using namespace std;
 
-pair<int*, int*> Dijkstra::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int startVertex) {
+pair<int *, int *> Dijkstra::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int startVertex) {
     int *dist = new int[numVertices]; // Array to store shortest distance from startVertex
     bool *visited = new bool[numVertices]; // Array to mark visited vertices
     int *prev = new int[numVertices]; // Array to store the previous vertex in the path
@@ -50,7 +50,7 @@ pair<int*, int*> Dijkstra::AlgorithmCalculationFromMatrix(int **adjMatrix, int n
     return make_pair(dist, prev);
 }
 
-PriorityQueue::PriorityQueue(int capacity, int* dist) {
+PriorityQueue::PriorityQueue(int capacity, int *dist) {
     this->capacity = capacity;
     this->size = 0;
     this->dist = dist;
@@ -81,7 +81,7 @@ void PriorityQueue::heapify(int idx) {
     }
 }
 
-void PriorityQueue::swap(int* a, int* b) {
+void PriorityQueue::swap(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
@@ -120,10 +120,10 @@ bool PriorityQueue::isEmpty() {
     return size == 0;
 }
 
-pair<int*, int*> Dijkstra::AlgorithmCalculationFromList(slistEl** adjList, int numVertices, int startVertex) {
-    int* dist = new int[numVertices];
-    int* prev = new int[numVertices];
-    bool* visited = new bool[numVertices];
+pair<int *, int *> Dijkstra::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, int startVertex) {
+    int *dist = new int[numVertices];
+    int *prev = new int[numVertices];
+    bool *visited = new bool[numVertices];
 
     for (int i = 0; i < numVertices; i++) {
         dist[i] = INT_MAX;
@@ -139,7 +139,7 @@ pair<int*, int*> Dijkstra::AlgorithmCalculationFromList(slistEl** adjList, int n
         int u = pq.pop();
         visited[u] = true;
 
-        for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
+        for (slistEl *p = adjList[u]; p != nullptr; p = p->next) {
             int v = p->v;
             int weight = p->weight;
 
@@ -156,40 +156,68 @@ pair<int*, int*> Dijkstra::AlgorithmCalculationFromList(slistEl** adjList, int n
 
 void Dijkstra::PrintResults(int *dist, int *prev, int numVertices, int startVertex) {
     // Print the results
-    cout << "Vertex\tDistance from Source\tPath" << endl;
+    printf("%-10s%-25s%s\n", "Vertex", "Distance from Source", "Path");
     for (int i = 0; i < numVertices; i++) {
-        cout << i << "\t" << dist[i] << "\t\t\t";
+        printf("%-10d%-25d", i, dist[i]);
         if (dist[i] != INT_MAX) {
             int j = i;
             while (j != startVertex) {
-                cout << j << " <- ";
+                printf("%d <- ", j);
                 j = prev[j];
             }
-            cout << startVertex << endl;
+            printf("%d\n", startVertex);
         } else {
-            cout << "No path" << endl;
+            printf("No path\n");
         }
     }
-
-    delete[] dist;
-    delete[] prev;
 }
 
-void Dijkstra::TimeCounterList(slistEl** adjList, int numVertices, int startVertex) {
-    auto start = chrono::high_resolution_clock::now();
-    pair<int*, int*> results = AlgorithmCalculationFromList(adjList, numVertices, startVertex);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> singleAlgorithmTime = end - start;
-    PrintResults(results.first, results.second, numVertices, startVertex);
-    cout << "Elapsed time: " << singleAlgorithmTime.count() / 1000 << " ms" << endl;
+void Dijkstra::TimeCounterList(slistEl **adjList, int numVertices, int startVertex) {
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        pair<int *, int *> results = AlgorithmCalculationFromList(adjList, numVertices, startVertex);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(results.first, results.second, numVertices, startVertex);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+        // Free allocated memory
+        delete[] results.first;
+        delete[] results.second;
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 }
-
 
 void Dijkstra::TimeCounterMatrix(int **adjMatrix, int numVertices, int startVertex) {
-    auto start = chrono::high_resolution_clock::now();
-    pair<int*, int*> results = AlgorithmCalculationFromMatrix(adjMatrix, numVertices, startVertex);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> singleAlgorithmTime = end - start;
-    PrintResults(results.first, results.second, numVertices, startVertex);
-    cout << "Elapsed time: " << singleAlgorithmTime.count() / 1000 << " ms" << endl;
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        pair<int *, int *> results = AlgorithmCalculationFromMatrix(adjMatrix, numVertices, startVertex);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(results.first, results.second, numVertices, startVertex);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+        // Free allocated memory
+        delete[] results.first;
+        delete[] results.second;
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 }

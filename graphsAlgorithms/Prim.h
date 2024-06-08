@@ -17,14 +17,7 @@ private:
         int src, dest, weight;
     };
 
-    struct CompareEdge {
-        bool operator()(Edge const &a, Edge const &b) {
-            return a.weight > b.weight;
-        }
-    };
-    static int find(int parent[], int i);
-    static void Union(int parent[], int rank[], int x, int y);
-
+    static int minKey(const std::vector<int>& key, const std::vector<bool>& inMST, int numVertices);
     static std::vector<Edge> mst; // Store the resulting MST
 };
 

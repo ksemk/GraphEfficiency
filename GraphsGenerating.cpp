@@ -94,7 +94,7 @@ void GraphsGenerating::printAdjacencyList() {
         cout << "A [" << i << "] =";
         slistEl *p = adjList[i];
         while (p) {
-            cout << " " << p->v;
+            cout << " " << p->v << " (weight: " << p->weight << ");";
             p = p->next;
         }
         cout << endl;
@@ -128,7 +128,7 @@ void GraphsGenerating::generateRandomGraph(int vertices, int density) {
     while (edgesAdded < numEdges) {
         int start = rand() % numVertices;
         int end = rand() % numVertices;
-        int weight = rand() % 10 + 1; // Random weight between 1 and 10
+        int weight = rand() % 9 + 1; // Random weight between 1 and 9
 
         if (start != end && adjMatrix[start][end] == 0) {
             adjMatrix[start][end] = weight; // Add edge to adjacency matrix

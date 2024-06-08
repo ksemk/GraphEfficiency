@@ -2,7 +2,6 @@
 #include "../GraphsGenerating.h"
 #include <iostream>
 #include <vector>
-#include <queue>
 #include <chrono>
 #include <climits>
 
@@ -10,36 +9,39 @@ using namespace std;
 
 vector<Prim::Edge> Prim::mst;
 
+int Prim::minKey(const vector<int>& key, const vector<bool>& inMST, int numVertices) {
+    int min = INT_MAX, minIndex;
+    for (int v = 0; v < numVertices; v++) {
+        if (!inMST[v] && key[v] < min) {
+            min = key[v];
+            minIndex = v;
+        }
+    }
+    return minIndex;
+}
+
 int Prim::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices) {
-    priority_queue<Edge, vector<Edge>, CompareEdge> pq;
-    vector<bool> inMST(numVertices, false);
     vector<int> key(numVertices, INT_MAX);
     vector<int> parent(numVertices, -1);
+    vector<bool> inMST(numVertices, false);
+    key[0] = 0;
     int mstWeight = 0;
 
-    pq.push({-1, 0, 0}); // Start with vertex 0
-    key[0] = 0;
-
-    while (!pq.empty()) {
-        int u = pq.top().dest; // Get the destination vertex
-        pq.pop();
-
-        if (inMST[u]) continue;
-
+    for (int count = 0; count < numVertices - 1; count++) {
+        int u = minKey(key, inMST, numVertices);
         inMST[u] = true;
         mstWeight += key[u];
 
-        for (int v = 0; v < numVertices; ++v) {
+        for (int v = 0; v < numVertices; v++) {
             if (adjMatrix[u][v] && !inMST[v] && adjMatrix[u][v] < key[v]) {
-                key[v] = adjMatrix[u][v];
-                pq.push({u, v, key[v]});
                 parent[v] = u;
+                key[v] = adjMatrix[u][v];
             }
         }
     }
 
     mst.clear();
-    for (int i = 1; i < numVertices; ++i) {
+    for (int i = 1; i < numVertices; i++) {
         if (parent[i] != -1) {
             mst.push_back({parent[i], i, adjMatrix[parent[i]][i]});
         }
@@ -49,21 +51,14 @@ int Prim::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices) {
 }
 
 int Prim::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
-    priority_queue<Edge, vector<Edge>, CompareEdge> pq;
-    vector<bool> inMST(numVertices, false);
     vector<int> key(numVertices, INT_MAX);
     vector<int> parent(numVertices, -1);
+    vector<bool> inMST(numVertices, false);
+    key[0] = 0;
     int mstWeight = 0;
 
-    pq.push({-1, 0, 0}); // Start with vertex 0
-    key[0] = 0;
-
-    while (!pq.empty()) {
-        int u = pq.top().dest; // Get the destination vertex
-        pq.pop();
-
-        if (inMST[u]) continue;
-
+    for (int count = 0; count < numVertices - 1; count++) {
+        int u = minKey(key, inMST, numVertices);
         inMST[u] = true;
         mstWeight += key[u];
 
@@ -72,15 +67,14 @@ int Prim::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
             int weight = p->weight;
 
             if (!inMST[v] && weight < key[v]) {
-                key[v] = weight;
-                pq.push({u, v, key[v]});
                 parent[v] = u;
+                key[v] = weight;
             }
         }
     }
 
     mst.clear();
-    for (int i = 1; i < numVertices; ++i) {
+    for (int i = 1; i < numVertices; i++) {
         if (parent[i] != -1) {
             mst.push_back({parent[i], i, key[i]});
         }
@@ -90,25 +84,53 @@ int Prim::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
 }
 
 void Prim::PrintResults(int mstWeight, double elapsed) {
-    cout << "Minimum Spanning Tree Weight: " << mstWeight << endl;
-    cout << "Edge \tWeight\n";
+    printf("Minimum Spanning Tree Weight: %d\n", mstWeight);
+    printf("%-10s %-10s\n", "Edge", "Weight");
     for (const auto& edge : mst)
-        cout << edge.src << " - " << edge.dest << " \t" << edge.weight << " \n";
-    cout << "Elapsed time: " << elapsed << " ms" << endl;
+        printf("%-4d - %-4d \t%-4d\n", edge.src, edge.dest, edge.weight);
+    printf("Elapsed time: %.3f ms\n", elapsed);
 }
 
 void Prim::TimeCounterMatrix(int **adjMatrix, int numVertices) {
-    auto start = chrono::high_resolution_clock::now();
-    int mstWeight = AlgorithmCalculationFromMatrix(adjMatrix, numVertices);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = end - start;
-    PrintResults(mstWeight, elapsed.count() * 1000);
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        int mstWeight = AlgorithmCalculationFromMatrix(adjMatrix, numVertices);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(mstWeight, elapsed.count() * 1000);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 }
 
 void Prim::TimeCounterList(slistEl **adjList, int numVertices) {
-    auto start = chrono::high_resolution_clock::now();
-    int mstWeight = AlgorithmCalculationFromList(adjList, numVertices);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = end - start;
-    PrintResults(mstWeight, elapsed.count() * 1000);
+    cout << "Give number of iterations: ";
+    int iterations;
+    float wholeTime = 0;
+    float avgTime;
+    cin >> iterations;
+    cout << endl;
+    for (int i = 0; i < iterations; i++) {
+        auto start = chrono::high_resolution_clock::now();
+        int mstWeight = AlgorithmCalculationFromList(adjList, numVertices);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        if (iterations == 1) {
+            PrintResults(mstWeight, elapsed.count() * 1000);
+        }
+        cout << "Elapsed time: " << elapsed.count() * 1000 << " ms" << endl;
+        wholeTime += elapsed.count();
+    }
+    avgTime = wholeTime / iterations * 1000;
+    cout << "Average time: " << avgTime << " ms" << endl;
 }
