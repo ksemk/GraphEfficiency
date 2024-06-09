@@ -1,4 +1,3 @@
-```cpp
 /**
  * @file Dijkstra.h
  * @brief This file contains the declaration of the Dijkstra and PriorityQueue classes.
