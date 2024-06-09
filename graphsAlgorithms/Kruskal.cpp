@@ -1,3 +1,8 @@
+/**
+ * @file Kruskal.cpp
+ * @brief This file contains the implementation of the Kruskal class.
+ */
+
 #include "Kruskal.h"
 #include <iostream>
 #include <vector>
@@ -5,9 +10,17 @@
 
 using namespace std;
 
+// The resulting MST, stored as a vector of edges
 vector<Kruskal::Edge> Kruskal::mst;
 
-// Find set of an element i (uses path compression technique)
+
+/**
+ * @brief Finds the set of an element i (uses path compression technique).
+ *
+ * @param parent The parent array.
+ * @param i The element.
+ * @return The set of the element.
+ */
 int Kruskal::find(int parent[], int i) {
     if (parent[i] == i) {
         return i;
@@ -15,7 +28,14 @@ int Kruskal::find(int parent[], int i) {
     return parent[i] = find(parent, parent[i]);
 }
 
-// A function that does union of two sets of x and y (uses union by rank)
+/**
+ * @brief Unions two sets of x and y (uses union by rank).
+ *
+ * @param parent The parent array.
+ * @param rank The rank array.
+ * @param x The first set.
+ * @param y The second set.
+ */
 void Kruskal::Union(int parent[], int rank[], int x, int y) {
     int xroot = find(parent, x);
     int yroot = find(parent, y);
@@ -30,7 +50,11 @@ void Kruskal::Union(int parent[], int rank[], int x, int y) {
     }
 }
 
-// Function to sort edges in non-decreasing order of their weight
+/**
+ * @brief Sorts the edges of the graph in non-decreasing order of their weight.
+ *
+ * @param edges The edges of the graph.
+ */
 void Kruskal::sortEdges(vector<Edge>& edges) {
     for (size_t i = 0; i < edges.size() - 1; i++) {
         for (size_t j = 0; j < edges.size() - i - 1; j++) {
@@ -41,6 +65,14 @@ void Kruskal::sortEdges(vector<Edge>& edges) {
     }
 }
 
+/**
+ * @brief Runs Kruskal's algorithm on a graph represented as an adjacency matrix.
+ *
+ * @param adjMatrix The adjacency matrix representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ * @return The total weight of the MST.
+ */
 int Kruskal::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int numEdges) {
     vector<Edge> edges;
     for (int u = 0; u < numVertices; ++u) {
@@ -81,6 +113,14 @@ int Kruskal::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, in
     return mstWeight;
 }
 
+/**
+ * @brief Runs Kruskal's algorithm on a graph represented as an adjacency list.
+ *
+ * @param adjList The adjacency list representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ * @return The total weight of the MST.
+ */
 int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, int numEdges) {
     vector<Edge> edges;
     for (int u = 0; u < numVertices; ++u) {
@@ -121,6 +161,12 @@ int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, in
     return mstWeight;
 }
 
+/**
+ * @brief Prints the results of Kruskal's algorithm.
+ *
+ * @param mstWeight The total weight of the MST.
+ * @param elapsed The time taken by the algorithm, in seconds.
+ */
 void Kruskal::PrintResults(int mstWeight, double elapsed) {
     printf("Minimum Spanning Tree Weight: %d\n", mstWeight);
     printf("%-10s %-10s\n", "Edge", "Weight");
@@ -129,6 +175,13 @@ void Kruskal::PrintResults(int mstWeight, double elapsed) {
     printf("Elapsed time: %.3f ms\n", elapsed);
 }
 
+/**
+ * @brief Measures and prints the time taken by Kruskal's algorithm on a graph represented as an adjacency matrix.
+ *
+ * @param adjMatrix The adjacency matrix representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ */
 void Kruskal::TimeCounterMatrix(int **adjMatrix, int numVertices, int numEdges) {
     cout << "Give number of iterations: ";
     int iterations;
@@ -151,6 +204,13 @@ void Kruskal::TimeCounterMatrix(int **adjMatrix, int numVertices, int numEdges) 
     cout << "Average time: " << avgTime << " ms" << endl;
 }
 
+/**
+ * @brief Measures and prints the time taken by Kruskal's algorithm on a graph represented as an adjacency list.
+ *
+ * @param adjList The adjacency list representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ */
 void Kruskal::TimeCounterList(slistEl **adjList, int numVertices, int numEdges) {
     cout << "Give number of iterations: ";
     int iterations;

@@ -5,6 +5,14 @@
 
 using namespace std;
 
+/**
+ * @brief This function implements the Bellman-Ford algorithm using adjacency matrix representation of the graph.
+ * @param adjMatrix The adjacency matrix representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ * @return A pair of arrays, where the first array contains the shortest distances from the start vertex to all other vertices,
+ * and the second array contains the previous vertex in the shortest path from the start vertex to each vertex.
+ */
 pair<int *, int *> BellmanFord::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int startVertex) {
     int *dist = new int[numVertices];
     int *prev = new int[numVertices];
@@ -44,6 +52,14 @@ pair<int *, int *> BellmanFord::AlgorithmCalculationFromMatrix(int **adjMatrix, 
     return make_pair(dist, prev);
 }
 
+/**
+ * @brief This function implements the Bellman-Ford algorithm using adjacency list representation of the graph.
+ * @param adjList The adjacency list representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ * @return A pair of arrays, where the first array contains the shortest distances from the start vertex to all other vertices,
+ * and the second array contains the previous vertex in the shortest path from the start vertex to each vertex.
+ */
 pair<int *, int *> BellmanFord::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, int startVertex) {
     int *dist = new int[numVertices];
     int *prev = new int[numVertices];
@@ -87,6 +103,14 @@ pair<int *, int *> BellmanFord::AlgorithmCalculationFromList(slistEl **adjList, 
     return make_pair(dist, prev);
 }
 
+/**
+ * @brief This function prints the results of the Bellman-Ford algorithm.
+ * It prints the shortest distance from the start vertex to each vertex, and the shortest path from the start vertex to each vertex.
+ * @param dist The array of shortest distances from the start vertex to each vertex.
+ * @param prev The array of previous vertices in the shortest path from the start vertex to each vertex.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ */
 void BellmanFord::PrintResults(int *dist, int *prev, int numVertices, int startVertex) {
     // Print the results
     printf("Vertex\tDistance from Source\tPath\n");
@@ -104,6 +128,13 @@ void BellmanFord::PrintResults(int *dist, int *prev, int numVertices, int startV
     }
 }
 
+/**
+ * @brief This function measures the time taken by the Bellman-Ford algorithm using adjacency matrix representation of the graph.
+ * It runs the algorithm a specified number of times and prints the average time taken.
+ * @param adjMatrix The adjacency matrix representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ */
 void BellmanFord::TimeCounterMatrix(int **adjMatrix, int numVertices, int startVertex) {
     cout << "Give number of iterations: ";
     int iterations;
@@ -130,6 +161,13 @@ void BellmanFord::TimeCounterMatrix(int **adjMatrix, int numVertices, int startV
 
 }
 
+/**
+ * @brief This function measures the time taken by the Bellman-Ford algorithm using adjacency list representation of the graph.
+ * It runs the algorithm a specified number of times and prints the average time taken.
+ * @param adjList The adjacency list representation of the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ */
 void BellmanFord::TimeCounterList(slistEl **adjList, int numVertices, int startVertex) {
     cout << "Give number of iterations: ";
     int iterations;

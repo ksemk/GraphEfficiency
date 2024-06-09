@@ -1,6 +1,7 @@
-//
-// Created by 10122 on 29.05.2024.
-//
+/**
+ * @file SimulationOptions.cpp
+ * @brief This file contains the implementation of the SimulationOptions class.
+ */
 
 #include "SimulationOptions.h"
 #include "GraphsGenerating.h"
@@ -14,6 +15,16 @@
 
 using namespace std;
 
+/**
+ * @brief Runs the main menu for the Graph Efficiency program.
+ *
+ * This function displays the main menu and handles the user's choice. The user can choose to compute the Minimum Spanning Tree (MST), compute the shortest path, compute the maximum flow, or exit the program.
+ * If the user chooses to compute the MST, the runMSTMenu function is called.
+ * If the user chooses to compute the shortest path, the runShortestPathMenu function is called.
+ * If the user chooses to compute the maximum flow, the runMaxFlowMenu function is called.
+ * If the user chooses to exit the program, a message is displayed and the function returns.
+ * If the user enters an invalid choice, an error message is displayed and the menu is displayed again.
+ */
 void SimulationOptions::runMenu() {
     int menuchoice; // Main menu choice
 
@@ -415,6 +426,11 @@ void SimulationOptions::runMenu() {
     } while (menuchoice != 0);
 }
 
+/**
+ * @brief Runs the menu for generating a random graph.
+ *
+ * This function prompts the user to enter the number of vertices and the density of the graph, then calls the generateRandomGraph function from the GraphsGenerating class to generate the graph.
+ */
 void SimulationOptions::randomGraphGeneratorMenu() {
     cout << "Generating random graph" << endl;
     cout << "Enter the number of vertices: ";
