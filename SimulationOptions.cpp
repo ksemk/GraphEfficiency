@@ -86,12 +86,12 @@ void SimulationOptions::runMenu() {
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printIncidenceMatrix();
                                         GraphsGenerating::printAdjacencyList();
                                         break;
                                     case 4:
                                         cout << "Run Prim's algorithm for computing minimal spanning tree" << endl;
-                                        Prim::TimeCounterMatrix(GraphsGenerating::adjMatrix, GraphsGenerating::numVertices);
+                                        Prim::TimeCounterMatrix(GraphsGenerating::incMatrix, GraphsGenerating::numVertices, GraphsGenerating::numEdges);
                                         break;
                                     case 5:
                                         cout << "Run Prim's algorithm for computing minimal spanning tree" << endl;
@@ -134,16 +134,16 @@ void SimulationOptions::runMenu() {
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printIncidenceMatrix();
                                         GraphsGenerating::printAdjacencyList();
                                         break;
                                     case 4:
                                         cout << "Run Kruskal's algorithm for computing minimal spanning tree" << endl;
-                                        Kruskal::TimeCounterMatrix(GraphsGenerating::adjMatrix, GraphsGenerating::numVertices, GraphsGenerating::numEdges);
+                                        Kruskal::TimeCounterMatrix(GraphsGenerating::incMatrix, GraphsGenerating::numVertices, GraphsGenerating::numEdges);
                                         break;
                                     case 5:
                                         cout << "Run Kruskal's algorithm for computing minimal spanning tree" << endl;
-                                        Kruskal::TimeCounterList(GraphsGenerating::adjList, GraphsGenerating::numVertices, GraphsGenerating::numEdges);
+                                        Kruskal::TimeCounterList(GraphsGenerating::adjList, GraphsGenerating::numVertices);
                                         break;
                                     case 0:
                                         cout << "Back to the previous menu" << endl;
@@ -209,13 +209,13 @@ void SimulationOptions::runMenu() {
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printIncidenceMatrix();
                                         GraphsGenerating::printAdjacencyList();
                                         break;
                                     case 4:
                                         cout << "Run Dijkstra's algorithm for computing shortest path" << endl;
-                                        Dijkstra::TimeCounterMatrix(GraphsGenerating::adjMatrix,
-                                                                    GraphsGenerating::numVertices, 0);
+                                        Dijkstra::TimeCounterMatrix(GraphsGenerating::incMatrix,
+                                                                    GraphsGenerating::numVertices, GraphsGenerating::numEdges, 0);
                                         break;
                                     case 5:
                                         cout << "Run Dijkstra's algorithm for computing shortest path" << endl;
@@ -261,12 +261,12 @@ void SimulationOptions::runMenu() {
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printIncidenceMatrix();
                                         GraphsGenerating::printAdjacencyList();
                                         break;
                                     case 4:
                                         cout << "Run Bellman-Ford algorithm for computing shortest path" << endl;
-                                        BellmanFord::TimeCounterMatrix(GraphsGenerating::adjMatrix, GraphsGenerating::numVertices, 0);
+                                        BellmanFord::TimeCounterMatrix(GraphsGenerating::incMatrix, GraphsGenerating::numVertices, GraphsGenerating::numEdges, 0);
                                         break;
                                     case 5:
                                         cout << "Run Bellman-Ford algorithm for computing shortest path" << endl;
@@ -312,7 +312,7 @@ void SimulationOptions::runMenu() {
                             int fordFulkersonDFSChoice;
                             do {
                                 cout << "|---------------------------------------------------|" << endl;
-                                cout << "| CHOOSE THE OPTION FOR DST FORD-FULKERSON ALGORITHM|" << endl;
+                                cout << "| CHOOSE THE OPTION FOR DFS FORD-FULKERSON ALGORITHM|" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
                                 cout << "| 1 - Load graph from file                          |" << endl;
                                 cout << "| 2 - Generate random graph                         |" << endl;
@@ -336,12 +336,12 @@ void SimulationOptions::runMenu() {
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printIncidenceMatrix();
                                         GraphsGenerating::printAdjacencyList();
                                         break;
                                     case 4:
                                         cout << "Run Ford-Fulkerson algorithm for computing maximum flow" << endl;
-                                        FordFulkersonDFS::TimeCounterMatrix(GraphsGenerating::adjMatrix, 0, GraphsGenerating::numVertices - 1, GraphsGenerating::numVertices);
+                                        FordFulkersonDFS::TimeCounterIncMatrix(GraphsGenerating::incMatrix, 0, GraphsGenerating::numVertices - 1, GraphsGenerating::numVertices, GraphsGenerating::numEdges);
                                         break;
                                     case 5:
                                         cout << "Run Ford-Fulkerson algorithm for computing maximum flow" << endl;
@@ -361,7 +361,7 @@ void SimulationOptions::runMenu() {
                             int fordFulkersonBFSChoice;
                             do {
                                 cout << "|---------------------------------------------------|" << endl;
-                                cout << "| CHOOSE THE OPTION FOR BST FORD-FULKERSON ALGORITHM|" << endl;
+                                cout << "| CHOOSE THE OPTION FOR BFS FORD-FULKERSON ALGORITHM|" << endl;
                                 cout << "|---------------------------------------------------|" << endl;
                                 cout << "| 1 - Load graph from file                          |" << endl;
                                 cout << "| 2 - Generate random graph                         |" << endl;
@@ -385,12 +385,12 @@ void SimulationOptions::runMenu() {
                                         break;
                                     case 3:
                                         cout << "Print existed graph" << endl;
-                                        GraphsGenerating::printAdjacencyMatrix();
+                                        GraphsGenerating::printIncidenceMatrix();
                                         GraphsGenerating::printAdjacencyList();
                                         break;
                                     case 4:
                                         cout << "Run Ford-Fulkerson algorithm for computing maximum flow" << endl;
-                                        FordFulkersonBFS::TimeCounterMatrix(GraphsGenerating::adjMatrix, 0, GraphsGenerating::numVertices - 1, GraphsGenerating::numVertices);
+                                        FordFulkersonBFS::TimeCounterIncMatrix(GraphsGenerating::incMatrix, 0, GraphsGenerating::numVertices - 1, GraphsGenerating::numVertices, GraphsGenerating::numEdges);
                                         break;
                                     case 5:
                                         cout << "Run Ford-Fulkerson algorithm for computing maximum flow" << endl;

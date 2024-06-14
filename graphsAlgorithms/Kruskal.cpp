@@ -13,7 +13,6 @@ using namespace std;
 // The resulting MST, stored as a vector of edges
 vector<Kruskal::Edge> Kruskal::mst;
 
-
 /**
  * @brief Finds the set of an element i (uses path compression technique).
  *
@@ -66,20 +65,30 @@ void Kruskal::sortEdges(vector<Edge>& edges) {
 }
 
 /**
- * @brief Runs Kruskal's algorithm on a graph represented as an adjacency matrix.
+ * @brief Runs Kruskal's algorithm on a graph represented as an incidence matrix.
  *
- * @param adjMatrix The adjacency matrix representation of the graph.
+ * @param incMatrix The incidence matrix representation of the graph.
  * @param numVertices The number of vertices in the graph.
  * @param numEdges The number of edges in the graph.
  * @return The total weight of the MST.
  */
-int Kruskal::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, int numEdges) {
+int Kruskal::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, int numEdges) {
     vector<Edge> edges;
-    for (int u = 0; u < numVertices; ++u) {
-        for (int v = u + 1; v < numVertices; ++v) {
-            if (adjMatrix[u][v] != 0) {
-                edges.push_back({u, v, adjMatrix[u][v]});
+    for (int e = 0; e < numEdges; ++e) {
+        int u = -1, v = -1, weight = 0;
+        for (int i = 0; i < numVertices; ++i) {
+            if (incMatrix[i][e] != 0) {
+                if (u == -1) {
+                    u = i;
+                    weight = abs(incMatrix[i][e]);
+                } else {
+                    v = i;
+                    break;
+                }
             }
+        }
+        if (u != -1 && v != -1) {
+            edges.push_back({u, v, weight});
         }
     }
 
@@ -118,10 +127,9 @@ int Kruskal::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices, in
  *
  * @param adjList The adjacency list representation of the graph.
  * @param numVertices The number of vertices in the graph.
- * @param numEdges The number of edges in the graph.
  * @return The total weight of the MST.
  */
-int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices, int numEdges) {
+int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
     vector<Edge> edges;
     for (int u = 0; u < numVertices; ++u) {
         for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
@@ -176,13 +184,13 @@ void Kruskal::PrintResults(int mstWeight, double elapsed) {
 }
 
 /**
- * @brief Measures and prints the time taken by Kruskal's algorithm on a graph represented as an adjacency matrix.
+ * @brief Measures and prints the time taken by Kruskal's algorithm on a graph represented as an incidence matrix.
  *
- * @param adjMatrix The adjacency matrix representation of the graph.
+ * @param incMatrix The incidence matrix representation of the graph.
  * @param numVertices The number of vertices in the graph.
  * @param numEdges The number of edges in the graph.
  */
-void Kruskal::TimeCounterMatrix(int **adjMatrix, int numVertices, int numEdges) {
+void Kruskal::TimeCounterMatrix(int **incMatrix, int numVertices, int numEdges) {
     cout << "Give number of iterations: ";
     int iterations;
     float wholeTime = 0;
@@ -191,7 +199,7 @@ void Kruskal::TimeCounterMatrix(int **adjMatrix, int numVertices, int numEdges) 
     cout << endl;
     for (int i = 0; i < iterations; i++) {
         auto start = chrono::high_resolution_clock::now();
-        int mstWeight = AlgorithmCalculationFromMatrix(adjMatrix, numVertices, numEdges);
+        int mstWeight = AlgorithmCalculationFromMatrix(incMatrix, numVertices, numEdges);
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double> elapsed = end - start;
         if (iterations == 1) {
@@ -209,9 +217,8 @@ void Kruskal::TimeCounterMatrix(int **adjMatrix, int numVertices, int numEdges) 
  *
  * @param adjList The adjacency list representation of the graph.
  * @param numVertices The number of vertices in the graph.
- * @param numEdges The number of edges in the graph.
  */
-void Kruskal::TimeCounterList(slistEl **adjList, int numVertices, int numEdges) {
+void Kruskal::TimeCounterList(slistEl **adjList, int numVertices) {
     cout << "Give number of iterations: ";
     int iterations;
     float wholeTime = 0;
@@ -220,7 +227,7 @@ void Kruskal::TimeCounterList(slistEl **adjList, int numVertices, int numEdges) 
     cout << endl;
     for (int i = 0; i < iterations; i++) {
         auto start = chrono::high_resolution_clock::now();
-        int mstWeight = AlgorithmCalculationFromList(adjList, numVertices, numEdges);
+        int mstWeight = AlgorithmCalculationFromList(adjList, numVertices);
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double> elapsed = end - start;
         if (iterations == 1) {

@@ -1,31 +1,18 @@
-/**
- * @file Prim.cpp
- * @brief This file contains the implementation of the Prim class.
- */
-
 #include "Prim.h"
-#include "../GraphsGenerating.h"
 #include <iostream>
-#include <vector>
 #include <chrono>
 #include <climits>
+#include <vector>
 
 using namespace std;
 
-// The resulting MST, stored as a vector of edges
-vector<Prim::Edge> Prim::mst;
+// Initialize static members
+Prim::Edge* Prim::mst = nullptr;
+int Prim::mstSize = 0;
 
-
-/**
- * @brief Finds the vertex with the minimum key value, from the set of vertices not yet included in the MST.
- *
- * @param key The key values of the vertices.
- * @param inMST A boolean vector indicating whether each vertex is included in the MST.
- * @param numVertices The number of vertices in the graph.
- * @return The index of the vertex with the minimum key value.
- */
-int Prim::minKey(const vector<int>& key, const vector<bool>& inMST, int numVertices) {
-    int min = INT_MAX, minIndex;
+// Finds the vertex with the minimum key value, from the set of vertices not yet included in the MST
+int Prim::minKey(int* key, bool* inMST, int numVertices) {
+    int min = INT_MAX, minIndex = -1;
     for (int v = 0; v < numVertices; v++) {
         if (!inMST[v] && key[v] < min) {
             min = key[v];
@@ -35,115 +22,82 @@ int Prim::minKey(const vector<int>& key, const vector<bool>& inMST, int numVerti
     return minIndex;
 }
 
-/**
- * @brief Runs Prim's algorithm on a graph represented as an adjacency matrix.
- *
- * @param adjMatrix The adjacency matrix representation of the graph.
- * @param numVertices The number of vertices in the graph.
- * @return The total weight of the MST.
- */
-int Prim::AlgorithmCalculationFromMatrix(int **adjMatrix, int numVertices) {
-    vector<int> key(numVertices, INT_MAX);
-    vector<int> parent(numVertices, -1);
-    vector<bool> inMST(numVertices, false);
+// Runs Prim's algorithm on a graph represented as an incidence matrix
+int Prim::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, int numEdges) {
+    int* key = new int[numVertices];
+    int* parent = new int[numVertices];
+    bool* inMST = new bool[numVertices];
+    for (int i = 0; i < numVertices; i++) {
+        key[i] = INT_MAX;
+        parent[i] = -1;
+        inMST[i] = false;
+    }
     key[0] = 0;
     int mstWeight = 0;
 
     for (int count = 0; count < numVertices - 1; count++) {
         int u = minKey(key, inMST, numVertices);
         inMST[u] = true;
-        mstWeight += key[u];
 
-        for (int v = 0; v < numVertices; v++) {
-            if (adjMatrix[u][v] && !inMST[v] && adjMatrix[u][v] < key[v]) {
-                parent[v] = u;
-                key[v] = adjMatrix[u][v];
+        for (int e = 0; e < numEdges; e++) {
+            if (incMatrix[u][e] != 0) {
+                int v = -1;
+                int weight = abs(incMatrix[u][e]);
+                for (int i = 0; i < numVertices; i++) {
+                    if (i != u && incMatrix[i][e] != 0) {
+                        v = i;
+                        break;
+                    }
+                }
+
+                if (v != -1 && !inMST[v] && weight < key[v]) {
+                    key[v] = weight;
+                    parent[v] = u;
+                }
             }
         }
     }
 
-    mst.clear();
+    delete[] mst;  // Clear previous MST
+    mst = new Edge[numVertices - 1];
+    mstSize = 0;
     for (int i = 1; i < numVertices; i++) {
         if (parent[i] != -1) {
-            mst.push_back({parent[i], i, adjMatrix[parent[i]][i]});
+            mst[mstSize++] = {parent[i], i, key[i]};
+            mstWeight += key[i];
         }
     }
 
+    delete[] key;
+    delete[] parent;
+    delete[] inMST;
     return mstWeight;
 }
 
-/**
- * @brief Runs Prim's algorithm on a graph represented as an adjacency list.
- *
- * @param adjList The adjacency list representation of the graph.
- * @param numVertices The number of vertices in the graph.
- * @return The total weight of the MST.
- */
-int Prim::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
-    vector<int> key(numVertices, INT_MAX);
-    vector<int> parent(numVertices, -1);
-    vector<bool> inMST(numVertices, false);
-    key[0] = 0;
-    int mstWeight = 0;
-
-    for (int count = 0; count < numVertices - 1; count++) {
-        int u = minKey(key, inMST, numVertices);
-        inMST[u] = true;
-        mstWeight += key[u];
-
-        for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
-            int v = p->v;
-            int weight = p->weight;
-
-            if (!inMST[v] && weight < key[v]) {
-                parent[v] = u;
-                key[v] = weight;
-            }
-        }
-    }
-
-    mst.clear();
-    for (int i = 1; i < numVertices; i++) {
-        if (parent[i] != -1) {
-            mst.push_back({parent[i], i, key[i]});
-        }
-    }
-
-    return mstWeight;
-}
-
-/**
- * @brief Prints the results of Prim's algorithm.
- *
- * @param mstWeight The total weight of the MST.
- * @param elapsed The time taken by the algorithm, in seconds.
- */
+// Prints the results of Prim's algorithm
 void Prim::PrintResults(int mstWeight, double elapsed) {
     printf("Minimum Spanning Tree Weight: %d\n", mstWeight);
     printf("%-10s %-10s\n", "Edge", "Weight");
-    for (const auto& edge : mst)
-        printf("%-4d - %-4d \t%-4d\n", edge.src, edge.dest, edge.weight);
+    for (int i = 0; i < mstSize; i++)
+        printf("%-4d - %-4d \t%-4d\n", mst[i].src, mst[i].dest, mst[i].weight);
     printf("Elapsed time: %.3f ms\n", elapsed);
 }
 
-/**
- * @brief Measures and prints the time taken by Prim's algorithm on a graph represented as an adjacency matrix.
- *
- * @param adjMatrix The adjacency matrix representation of the graph.
- * @param numVertices The number of vertices in the graph.
- */
-void Prim::TimeCounterMatrix(int **adjMatrix, int numVertices) {
+// Measures and prints the time taken by Prim's algorithm on a graph represented as an incidence matrix
+void Prim::TimeCounterMatrix(int **incMatrix, int numVertices, int numEdges) {
     cout << "Give number of iterations: ";
     int iterations;
-    float wholeTime = 0;
-    float avgTime;
     cin >> iterations;
     cout << endl;
+    float wholeTime = 0;
+    float avgTime;
+
     for (int i = 0; i < iterations; i++) {
         auto start = chrono::high_resolution_clock::now();
-        int mstWeight = AlgorithmCalculationFromMatrix(adjMatrix, numVertices);
+        int mstWeight = AlgorithmCalculationFromMatrix(incMatrix, numVertices, numEdges);
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double> elapsed = end - start;
+
         if (iterations == 1) {
             PrintResults(mstWeight, elapsed.count() * 1000);
         }
@@ -154,24 +108,64 @@ void Prim::TimeCounterMatrix(int **adjMatrix, int numVertices) {
     cout << "Average time: " << avgTime << " ms" << endl;
 }
 
-/**
- * @brief Measures and prints the time taken by Prim's algorithm on a graph represented as an adjacency list.
- *
- * @param adjList The adjacency list representation of the graph.
- * @param numVertices The number of vertices in the graph.
- */
+// Runs Prim's algorithm on a graph represented as an adjacency list
+int Prim::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
+    int* key = new int[numVertices];
+    int* parent = new int[numVertices];
+    bool* inMST = new bool[numVertices];
+    for (int i = 0; i < numVertices; i++) {
+        key[i] = INT_MAX;
+        parent[i] = -1;
+        inMST[i] = false;
+    }
+    key[0] = 0;
+    int mstWeight = 0;
+
+    for (int count = 0; count < numVertices - 1; count++) {
+        int u = minKey(key, inMST, numVertices);
+        inMST[u] = true;
+
+        for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
+            int v = p->v;
+            if (!inMST[v] && p->weight < key[v]) {
+                parent[v] = u;
+                key[v] = p->weight;
+            }
+        }
+    }
+
+    mstWeight = 0;
+    delete[] mst; // Clear previous MST
+    mst = new Edge[numVertices - 1];
+    mstSize = 0;
+    for (int i = 1; i < numVertices; i++) {
+        if (parent[i] != -1) {
+            mst[mstSize++] = {parent[i], i, key[i]};
+            mstWeight += key[i];
+        }
+    }
+
+    delete[] key;
+    delete[] parent;
+    delete[] inMST;
+    return mstWeight;
+}
+
+// Measures and prints the time taken by Prim's algorithm on a graph represented as an adjacency list
 void Prim::TimeCounterList(slistEl **adjList, int numVertices) {
     cout << "Give number of iterations: ";
     int iterations;
-    float wholeTime = 0;
-    float avgTime;
     cin >> iterations;
     cout << endl;
+    float wholeTime = 0;
+    float avgTime;
+
     for (int i = 0; i < iterations; i++) {
         auto start = chrono::high_resolution_clock::now();
         int mstWeight = AlgorithmCalculationFromList(adjList, numVertices);
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double> elapsed = end - start;
+
         if (iterations == 1) {
             PrintResults(mstWeight, elapsed.count() * 1000);
         }

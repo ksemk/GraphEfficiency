@@ -12,7 +12,7 @@
  * @class FordFulkersonDFS
  * @brief A class for implementing Ford-Fulkerson algorithm using Depth-First Search (DFS).
  *
- * This class provides static methods for running the Ford-Fulkerson algorithm on a graph represented as either an adjacency matrix or an adjacency list, printing the results, and measuring the time taken by the algorithm.
+ * This class provides static methods for running the Ford-Fulkerson algorithm on a graph represented as either an incidence matrix or an adjacency list, printing the results, and measuring the time taken by the algorithm.
  */
 class FordFulkersonDFS {
 public:
@@ -41,15 +41,29 @@ public:
     static bool dfsList(slistEl **residualGraph, int source, int sink, int parent[], int numVertices);
 
     /**
-     * @brief Runs the Ford-Fulkerson algorithm on a graph represented as an adjacency matrix.
+     * @brief Performs a DFS on the residual graph (represented as an incidence matrix) and returns true if there is a path from source to sink.
      *
-     * @param graph The graph.
+     * @param incMatrix The incidence matrix.
+     * @param source The source vertex.
+     * @param sink The sink vertex.
+     * @param parent The parent array.
+     * @param numVertices The number of vertices in the graph.
+     * @param numEdges The number of edges in the graph.
+     * @return True if there is a path from source to sink, false otherwise.
+     */
+    static bool dfsIncMatrix(int **incMatrix, int source, int sink, int parent[], int numVertices, int numEdges);
+
+    /**
+     * @brief Runs the Ford-Fulkerson algorithm on a graph represented as an incidence matrix.
+     *
+     * @param incMatrix The incidence matrix.
      * @param source The source vertex.
      * @param sink The sink vertex.
      * @param numVertices The number of vertices in the graph.
+     * @param numEdges The number of edges in the graph.
      * @return The maximum flow.
      */
-    static int AlgorithmCalculationFromMatrix(int **graph, int source, int sink, int numVertices);
+    static int AlgorithmCalculationFromIncMatrix(int **incMatrix, int source, int sink, int numVertices, int numEdges);
 
     /**
      * @brief Runs the Ford-Fulkerson algorithm on a graph represented as an adjacency list.
@@ -69,8 +83,9 @@ public:
      * @param elapsed The time taken by the algorithm, in seconds.
      * @param residualGraph The residual graph.
      * @param numVertices The number of vertices in the graph.
+     * @param numEdges The number of edges in the graph.
      */
-    static void PrintResults(int maxFlow, double elapsed, int **residualGraph, int numVertices);
+    static void PrintResults(int maxFlow, double elapsed, int **residualGraph, int numVertices, int numEdges);
 
     /**
      * @brief Prints the results of the Ford-Fulkerson algorithm for a graph represented as an adjacency list.
@@ -83,14 +98,15 @@ public:
     static void PrintResultsList(int maxFlow, double elapsed, slistEl **residualGraph, int numVertices);
 
     /**
-     * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm on a graph represented as an adjacency matrix.
+     * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm on a graph represented as an incidence matrix.
      *
-     * @param graph The graph.
+     * @param incMatrix The incidence matrix.
      * @param source The source vertex.
      * @param sink The sink vertex.
      * @param numVertices The number of vertices in the graph.
+     * @param numEdges The number of edges in the graph.
      */
-    static void TimeCounterMatrix(int **graph, int source, int sink, int numVertices);
+    static void TimeCounterIncMatrix(int **incMatrix, int source, int sink, int numVertices, int numEdges);
 
     /**
      * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm on a graph represented as an adjacency list.
