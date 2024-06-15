@@ -6,6 +6,13 @@
 
 using namespace std;
 
+/**
+ * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm with BFS on a graph represented as an adjacency list.
+ * @param graph The adjacency list representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ */
 bool FordFulkersonBFS::bfsIncMatrix(int **incMatrix, int source, int sink, int parent[], int numVertices, int numEdges) {
     bool *visited = new bool[numVertices]();
     int *queue = new int[numVertices];
@@ -45,6 +52,13 @@ bool FordFulkersonBFS::bfsIncMatrix(int **incMatrix, int source, int sink, int p
     return false;
 }
 
+/**
+ * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm with BFS on a graph represented as an adjacency list.
+ * @param graph The adjacency list representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ */
 int FordFulkersonBFS::AlgorithmCalculationFromIncMatrix(int **incMatrix, int source, int sink, int numVertices, int numEdges) {
     int **residualGraph = new int *[numVertices];
     for (int i = 0; i < numVertices; ++i) {
@@ -92,6 +106,13 @@ int FordFulkersonBFS::AlgorithmCalculationFromIncMatrix(int **incMatrix, int sou
     return maxFlow;
 }
 
+/**
+ * @brief Prints the results of the Ford-Fulkerson algorithm with BFS.
+ * @param maxFlow The maximum flow from source to sink.
+ * @param elapsed The time taken to execute the algorithm.
+ * @param residualGraph The residual graph.
+ * @param numVertices The number of vertices in the graph.
+ */
 void FordFulkersonBFS::PrintResults(int maxFlow, double elapsed, int **residualGraph, int numVertices) {
     printf("Elapsed time: %.3f ms\n", elapsed);
     printf("Residual Graph:\n");
@@ -105,6 +126,14 @@ void FordFulkersonBFS::PrintResults(int maxFlow, double elapsed, int **residualG
     printf("Max Flow: %d\n", maxFlow);
 }
 
+/**
+ * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm with BFS on a graph represented as an incidence matrix.
+ * @param incMatrix The incidence matrix representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ */
 void FordFulkersonBFS::TimeCounterIncMatrix(int **incMatrix, int source, int sink, int numVertices, int numEdges) {
     cout << "Give number of iterations: ";
     int iterations;
@@ -129,6 +158,15 @@ void FordFulkersonBFS::TimeCounterIncMatrix(int **incMatrix, int source, int sin
     cout << "Average time: " << avgTime << " ms" << endl;
 }
 
+/**
+ * @brief Performs a breadth-first search on a graph represented as an adjacency list.
+ * @param residualGraph The residual graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param parent The parent array.
+ * @param numVertices The number of vertices in the graph.
+ * @return True if there is a path from source to sink, false otherwise.
+ */
 bool FordFulkersonBFS::bfsList(slistEl **residualGraph, int source, int sink, int parent[], int numVertices) {
     bool *visited = new bool[numVertices]();
     int *queue = new int[numVertices];
@@ -160,6 +198,14 @@ bool FordFulkersonBFS::bfsList(slistEl **residualGraph, int source, int sink, in
     return false;
 }
 
+/**
+ * @brief Executes the Ford-Fulkerson algorithm with BFS on a graph represented as an adjacency list.
+ * @param graph The adjacency list representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ * @return The maximum flow from source to sink.
+ */
 int FordFulkersonBFS::AlgorithmCalculationFromList(slistEl **graph, int source, int sink, int numVertices) {
     slistEl **residualGraph = new slistEl *[numVertices];
     for (int u = 0; u < numVertices; u++) {
@@ -218,6 +264,12 @@ int FordFulkersonBFS::AlgorithmCalculationFromList(slistEl **graph, int source, 
     return maxFlow;
 }
 
+/**
+ * @brief Prints the results of the Ford-Fulkerson algorithm with BFS on a graph represented as an adjacency list.
+ * @param maxFlow The maximum flow from source to sink.
+ * @param residualGraph The residual graph.
+ * @param numVertices The number of vertices in the graph.
+ */
 void FordFulkersonBFS::PrintResultsList(int maxFlow, slistEl **residualGraph, int numVertices) {
     printf("Residual Graph:\n");
     for (int u = 0; u < numVertices; ++u) {

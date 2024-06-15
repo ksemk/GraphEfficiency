@@ -5,6 +5,16 @@
 
 using namespace std;
 
+/**
+ * @brief Performs a depth-first search on a graph represented as an incidence matrix.
+ * @param residualGraph The residual graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param parent The parent array.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ * @return True if there is a path from source to sink, false otherwise.
+ */
 bool FordFulkersonDFS::dfsIncMatrix(int **residualGraph, int source, int sink, int parent[], int numVertices, int numEdges) {
     bool *visited = new bool[numVertices](); // Initialize with false
     int *stack = new int[numVertices];
@@ -44,6 +54,15 @@ bool FordFulkersonDFS::dfsIncMatrix(int **residualGraph, int source, int sink, i
     return false;
 }
 
+/**
+ * @brief Executes the Ford-Fulkerson algorithm with DFS on a graph represented as an incidence matrix.
+ * @param incMatrix The incidence matrix representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ * @return The maximum flow from source to sink.
+ */
 int FordFulkersonDFS::AlgorithmCalculationFromIncMatrix(int **incMatrix, int source, int sink, int numVertices, int numEdges) {
     int **residualGraph = new int *[numVertices];
     for (int i = 0; i < numVertices; ++i) {
@@ -91,6 +110,14 @@ int FordFulkersonDFS::AlgorithmCalculationFromIncMatrix(int **incMatrix, int sou
     return maxFlow;
 }
 
+/**
+ * @brief Prints the results of the Ford-Fulkerson algorithm with DFS.
+ * @param maxFlow The maximum flow from source to sink.
+ * @param elapsed The time taken to execute the algorithm.
+ * @param residualGraph The residual graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ */
 void FordFulkersonDFS::PrintResults(int maxFlow, double elapsed, int **residualGraph, int numVertices, int numEdges) {
     printf("Elapsed time: %.3f ms\n", elapsed);
     printf("Residual Graph:\n");
@@ -109,6 +136,15 @@ void FordFulkersonDFS::PrintResults(int maxFlow, double elapsed, int **residualG
     printf("Max Flow: %d\n", maxFlow);
 }
 
+/**
+ * @brief Performs a depth-first search on a graph represented as an adjacency list.
+ * @param residualGraph The residual graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param parent The parent array.
+ * @param numVertices The number of vertices in the graph.
+ * @return True if there is a path from source to sink, false otherwise.
+ */
 bool FordFulkersonDFS::dfsList(slistEl **residualGraph, int source, int sink, int parent[], int numVertices) {
     bool *visited = new bool[numVertices](); // Initialize with false
     int *stack = new int[numVertices];
@@ -140,6 +176,14 @@ bool FordFulkersonDFS::dfsList(slistEl **residualGraph, int source, int sink, in
     return false;
 }
 
+/**
+ * @brief Executes the Ford-Fulkerson algorithm with DFS on a graph represented as an adjacency list.
+ * @param graph The adjacency list representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ * @return The maximum flow from source to sink.
+ */
 int FordFulkersonDFS::AlgorithmCalculationFromList(slistEl **graph, int source, int sink, int numVertices) {
     slistEl **residualGraph = new slistEl *[numVertices];
     for (int u = 0; u < numVertices; u++) {
@@ -198,6 +242,13 @@ int FordFulkersonDFS::AlgorithmCalculationFromList(slistEl **graph, int source, 
     return maxFlow;
 }
 
+/**
+ * @brief Prints the results of the Ford-Fulkerson algorithm with DFS on a graph represented as an adjacency list.
+ * @param maxFlow The maximum flow from source to sink.
+ * @param elapsed The time taken to execute the algorithm.
+ * @param residualGraph The residual graph.
+ * @param numVertices The number of vertices in the graph.
+ */
 void FordFulkersonDFS::PrintResultsList(int maxFlow, double elapsed, slistEl **residualGraph, int numVertices) {
     printf("Elapsed time: %.3f ms\n", elapsed);
     printf("Residual Graph:\n");
@@ -211,6 +262,14 @@ void FordFulkersonDFS::PrintResultsList(int maxFlow, double elapsed, slistEl **r
     printf("Max Flow: %d\n", maxFlow);
 }
 
+/**
+ * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm with DFS on a graph represented as an incidence matrix.
+ * @param incMatrix The incidence matrix representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ */
 void FordFulkersonDFS::TimeCounterIncMatrix(int **incMatrix, int source, int sink, int numVertices, int numEdges) {
     cout << "Give number of iterations: ";
     int iterations;
@@ -233,6 +292,14 @@ void FordFulkersonDFS::TimeCounterIncMatrix(int **incMatrix, int source, int sin
 
     avgTime = wholeTime / iterations * 1000;
     cout << "Average time: " << avgTime << " ms" << endl;
+
+/**
+ * @brief Measures and prints the time taken by the Ford-Fulkerson algorithm with DFS on a graph represented as an adjacency list.
+ * @param graph The adjacency list representing the graph.
+ * @param source The source vertex.
+ * @param sink The sink vertex.
+ * @param numVertices The number of vertices in the graph.
+ */
 }void FordFulkersonDFS::TimeCounterList(slistEl **graph, int source, int sink, int numVertices) {
     cout << "Give number of iterations: ";
     int iterations;

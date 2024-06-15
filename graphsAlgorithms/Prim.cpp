@@ -2,7 +2,6 @@
 #include <iostream>
 #include <chrono>
 #include <climits>
-#include <vector>
 
 using namespace std;
 
@@ -10,7 +9,13 @@ using namespace std;
 Prim::Edge* Prim::mst = nullptr;
 int Prim::mstSize = 0;
 
-// Finds the vertex with the minimum key value, from the set of vertices not yet included in the MST
+/**
+* @brief Finds the vertex with the minimum key value, from the set of vertices not yet included in the MST
+* @param key Array of key values
+* @param inMST Array indicating whether a vertex is included in the MST
+* @param numVertices Number of vertices in the graph
+* @return Index of the vertex with the minimum key value
+*/
 int Prim::minKey(int* key, bool* inMST, int numVertices) {
     int min = INT_MAX, minIndex = -1;
     for (int v = 0; v < numVertices; v++) {
@@ -22,7 +27,13 @@ int Prim::minKey(int* key, bool* inMST, int numVertices) {
     return minIndex;
 }
 
-// Runs Prim's algorithm on a graph represented as an incidence matrix
+/**
+ * @brief Runs Prim's algorithm on a graph represented as an incidence matrix
+ * @param incMatrix Incidence matrix representing the graph
+ * @param numVertices Number of vertices in the graph
+ * @param numEdges Number of edges in the graph
+ * @return Weight of the minimum spanning tree
+ */
 int Prim::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, int numEdges) {
     int* key = new int[numVertices];
     int* parent = new int[numVertices];
@@ -74,7 +85,12 @@ int Prim::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, int n
     return mstWeight;
 }
 
-// Prints the results of Prim's algorithm
+
+/**
+ * @brief Prints the results of Prim's algorithm
+ * @param mstWeight Weight of the minimum spanning tree
+ * @param elapsed Time taken by the algorithm
+ */
 void Prim::PrintResults(int mstWeight, double elapsed) {
     printf("Minimum Spanning Tree Weight: %d\n", mstWeight);
     printf("%-10s %-10s\n", "Edge", "Weight");
@@ -83,7 +99,13 @@ void Prim::PrintResults(int mstWeight, double elapsed) {
     printf("Elapsed time: %.3f ms\n", elapsed);
 }
 
-// Measures and prints the time taken by Prim's algorithm on a graph represented as an incidence matrix
+
+/**
+ * @brief Measures and prints the time taken by Prim's algorithm on a graph represented as an incidence matrix
+ * @param incMatrix Incidence matrix representing the graph
+ * @param numVertices Number of vertices in the graph
+ * @param numEdges Number of edges in the graph
+ */
 void Prim::TimeCounterMatrix(int **incMatrix, int numVertices, int numEdges) {
     cout << "Give number of iterations: ";
     int iterations;
@@ -108,7 +130,13 @@ void Prim::TimeCounterMatrix(int **incMatrix, int numVertices, int numEdges) {
     cout << "Average time: " << avgTime << " ms" << endl;
 }
 
-// Runs Prim's algorithm on a graph represented as an adjacency list
+
+/**
+ * @brief Runs Prim's algorithm on a graph represented as an adjacency list
+ * @param adjList Adjacency list representing the graph
+ * @param numVertices Number of vertices in the graph
+ * @return Weight of the minimum spanning tree
+ */
 int Prim::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
     int* key = new int[numVertices];
     int* parent = new int[numVertices];
@@ -151,7 +179,12 @@ int Prim::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
     return mstWeight;
 }
 
-// Measures and prints the time taken by Prim's algorithm on a graph represented as an adjacency list
+
+/**
+ * @brief Measures and prints the time taken by Prim's algorithm on a graph represented as an adjacency list
+ * @param adjList Adjacency list representing the graph
+ * @param numVertices Number of vertices in the graph
+ */
 void Prim::TimeCounterList(slistEl **adjList, int numVertices) {
     cout << "Give number of iterations: ";
     int iterations;

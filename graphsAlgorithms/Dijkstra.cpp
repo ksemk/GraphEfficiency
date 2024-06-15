@@ -5,6 +5,14 @@
 
 using namespace std;
 
+/**
+ * @brief Executes Dijkstra's algorithm on a graph represented as an incidence matrix.
+ * @param incMatrix The incidence matrix representing the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ * @return A pair of arrays representing the shortest distances and the previous vertices.
+ */
 pair<int*, int*> Dijkstra::AlgorithmCalculationFromMatrix(int** incMatrix, int numVertices, int numEdges, int startVertex) {
     int* dist = new int[numVertices];
     bool* visited = new bool[numVertices];
@@ -48,6 +56,11 @@ pair<int*, int*> Dijkstra::AlgorithmCalculationFromMatrix(int** incMatrix, int n
     return make_pair(dist, prev);
 }
 
+/**
+ * @brief Constructor for the PriorityQueue class.
+ * @param capacity The maximum capacity of the priority queue.
+ * @param dist The array of distances from the source vertex.
+ */
 PriorityQueue::PriorityQueue(int capacity, int* dist) {
     this->capacity = capacity;
     this->size = 0;
@@ -59,11 +72,18 @@ PriorityQueue::PriorityQueue(int capacity, int* dist) {
     }
 }
 
+/**
+ * @brief Destructor for the PriorityQueue class.
+ */
 PriorityQueue::~PriorityQueue() {
     delete[] heap;
     delete[] pos;
 }
 
+/**
+ * @brief Heapify function for maintaining the heap property of the priority queue.
+ * @param idx The index of the element to be heapified.
+ */
 void PriorityQueue::heapify(int idx) {
     int smallest = idx;
     int left = 2 * idx + 1;
@@ -82,12 +102,21 @@ void PriorityQueue::heapify(int idx) {
     }
 }
 
+/**
+ * @brief Swap function for swapping two elements in the priority queue.
+ * @param a Pointer to the first element.
+ * @param b Pointer to the second element.
+ */
 void PriorityQueue::swap(int* a, int* b) {
     int temp = *a;
     *a = *b;
     *b = temp;
 }
 
+/**
+ * @brief Inserts a vertex into the priority queue.
+ * @param v The vertex to be inserted.
+ */
 void PriorityQueue::push(int v) {
     if (pos[v] != -1) { // Vertex is already in the heap, decrease its key
         decreaseKey(v);
@@ -105,6 +134,10 @@ void PriorityQueue::push(int v) {
     }
 }
 
+/**
+ * @brief Decreases the key (distance) of a vertex.
+ * @param v The vertex whose key is to be decreased.
+ */
 void PriorityQueue::decreaseKey(int v) {
     int i = pos[v];
     while (i && dist[heap[i]] < dist[heap[(i - 1) / 2]]) {
@@ -114,6 +147,10 @@ void PriorityQueue::decreaseKey(int v) {
     }
 }
 
+/**
+ * @brief Removes and returns the vertex with the highest priority (lowest distance).
+ * @return The vertex with the highest priority.
+ */
 int PriorityQueue::pop() {
     if (size == 0)
         return -1;
@@ -133,10 +170,21 @@ int PriorityQueue::pop() {
     return root;
 }
 
+/**
+ * @brief Checks if the priority queue is empty.
+ * @return True if the priority queue is empty, false otherwise.
+ */
 bool PriorityQueue::isEmpty() {
     return size == 0;
 }
 
+/**
+ * @brief Executes Dijkstra's algorithm on a graph represented as an adjacency list.
+ * @param adjList The adjacency list representing the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ * @return A pair of arrays representing the shortest distances and the previous vertices.
+ */
 pair<int*, int*> Dijkstra::AlgorithmCalculationFromList(slistEl** adjList, int numVertices, int startVertex) {
     int* dist = new int[numVertices];
     int* prev = new int[numVertices];
@@ -173,6 +221,13 @@ pair<int*, int*> Dijkstra::AlgorithmCalculationFromList(slistEl** adjList, int n
     return make_pair(dist, prev);
 }
 
+/**
+ * @brief Prints the results of Dijkstra's algorithm.
+ * @param dist The array of shortest distances.
+ * @param prev The array of previous vertices.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ */
 void Dijkstra::PrintResults(int* dist, int* prev, int numVertices, int startVertex) {
     printf("%-10s%-25s%s\n", "Vertex", "Distance from Source", "Path");
     for (int i = 0; i < numVertices; i++) {
@@ -190,6 +245,12 @@ void Dijkstra::PrintResults(int* dist, int* prev, int numVertices, int startVert
     }
 }
 
+/**
+ * @brief Measures and prints the time taken by Dijkstra's algorithm on a graph represented as an adjacency list.
+ * @param adjList The adjacency list representing the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ */
 void Dijkstra::TimeCounterList(slistEl **adjList, int numVertices, int startVertex) {
     cout << "Give number of iterations: ";
     int iterations;
@@ -214,6 +275,13 @@ void Dijkstra::TimeCounterList(slistEl **adjList, int numVertices, int startVert
     cout << "Average time: " << avgTime << " ms" << endl;
 }
 
+/**
+ * @brief Measures and prints the time taken by Dijkstra's algorithm on a graph represented as an incidence matrix.
+ * @param incMatrix The incidence matrix representing the graph.
+ * @param numVertices The number of vertices in the graph.
+ * @param numEdges The number of edges in the graph.
+ * @param startVertex The starting vertex for the algorithm.
+ */
 void Dijkstra::TimeCounterMatrix(int **incMatrix, int numVertices, int numEdges, int startVertex) {
     cout << "Give number of iterations: ";
     int iterations;

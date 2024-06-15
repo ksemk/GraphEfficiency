@@ -5,13 +5,15 @@
 
 #include "Kruskal.h"
 #include <iostream>
-#include <vector>
+#include <cstdio>
+#include <cstdlib>
 #include <chrono>
 
 using namespace std;
 
-// The resulting MST, stored as a vector of edges
-vector<Kruskal::Edge> Kruskal::mst;
+// The resulting MST, stored as an array of edges
+Kruskal::Edge* Kruskal::mst = nullptr;
+int Kruskal::mstSize = 0;
 
 /**
  * @brief Finds the set of an element i (uses path compression technique).
@@ -21,14 +23,15 @@ vector<Kruskal::Edge> Kruskal::mst;
  * @return The set of the element.
  */
 int Kruskal::find(int parent[], int i) {
-    if (parent[i] == i) {
-        return i;
+    while (parent[i] != i) {
+        parent[i] = parent[parent[i]]; // Path compression
+        i = parent[i];
     }
-    return parent[i] = find(parent, parent[i]);
+    return i;
 }
 
 /**
- * @brief Unions two sets of x and y (uses union by rank).
+ * @brief Unions two sets of x and y.
  *
  * @param parent The parent array.
  * @param rank The rank array.
@@ -50,18 +53,70 @@ void Kruskal::Union(int parent[], int rank[], int x, int y) {
 }
 
 /**
- * @brief Sorts the edges of the graph in non-decreasing order of their weight.
+ * @brief Merges two subarrays of edges.
  *
- * @param edges The edges of the graph.
+ * @param edges The array of edges.
+ * @param left The left index.
+ * @param mid The middle index.
+ * @param right The right index.
  */
-void Kruskal::sortEdges(vector<Edge>& edges) {
-    for (size_t i = 0; i < edges.size() - 1; i++) {
-        for (size_t j = 0; j < edges.size() - i - 1; j++) {
-            if (edges[j].weight > edges[j + 1].weight) {
-                swap(edges[j], edges[j + 1]);
-            }
-        }
+void merge(Kruskal::Edge edges[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    Kruskal::Edge* L = new Kruskal::Edge[n1];
+    Kruskal::Edge* R = new Kruskal::Edge[n2];
+
+    for (int i = 0; i < n1; i++) {
+        L[i] = edges[left + i];
     }
+    for (int j = 0; j < n2; j++) {
+        R[j] = edges[mid + 1 + j];
+    }
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (L[i].weight <= R[j].weight) {
+            edges[k] = L[i];
+            i++;
+        } else {
+            edges[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        edges[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        edges[k] = R[j];
+        j++;
+        k++;
+    }
+
+    delete[] L;
+    delete[] R;
+}
+
+/**
+ * @brief Sorts edges using merge sort.
+ *
+ * @param edges The array of edges.
+ * @param left The left index.
+ * @param right The right index.
+ */
+void mergeSort(Kruskal::Edge edges[], int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    int mid = left + (right - left) / 2;
+    mergeSort(edges, left, mid);
+    mergeSort(edges, mid + 1, right);
+    merge(edges, left, mid, right);
 }
 
 /**
@@ -73,7 +128,9 @@ void Kruskal::sortEdges(vector<Edge>& edges) {
  * @return The total weight of the MST.
  */
 int Kruskal::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, int numEdges) {
-    vector<Edge> edges;
+    Edge* edges = new Edge[numEdges];
+    int edgeCount = 0;
+
     for (int e = 0; e < numEdges; ++e) {
         int u = -1, v = -1, weight = 0;
         for (int i = 0; i < numVertices; ++i) {
@@ -88,11 +145,11 @@ int Kruskal::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, in
             }
         }
         if (u != -1 && v != -1) {
-            edges.push_back({u, v, weight});
+            edges[edgeCount++] = {u, v, weight};
         }
     }
 
-    sortEdges(edges);
+    mergeSort(edges, 0, edgeCount - 1);
 
     int *parent = new int[numVertices];
     int *rank = new int[numVertices];
@@ -103,19 +160,24 @@ int Kruskal::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, in
     }
 
     int mstWeight = 0;
-    mst.clear(); // Clear the mst vector
+    if (mst != nullptr) {
+        delete[] mst;
+    }
+    mst = new Edge[edgeCount];
+    mstSize = 0;
 
-    for (const Edge &edge : edges) {
-        int x = find(parent, edge.src);
-        int y = find(parent, edge.dest);
+    for (int i = 0; i < edgeCount; ++i) {
+        int x = find(parent, edges[i].src);
+        int y = find(parent, edges[i].dest);
 
         if (x != y) {
-            mstWeight += edge.weight;
+            mstWeight += edges[i].weight;
             Union(parent, rank, x, y);
-            mst.push_back(edge); // Store the edge in the MST
+            mst[mstSize++] = edges[i];
         }
     }
 
+    delete[] edges;
     delete[] parent;
     delete[] rank;
 
@@ -130,16 +192,26 @@ int Kruskal::AlgorithmCalculationFromMatrix(int **incMatrix, int numVertices, in
  * @return The total weight of the MST.
  */
 int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
-    vector<Edge> edges;
+    int numEdges = 0;
     for (int u = 0; u < numVertices; ++u) {
         for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
-            if (u < p->v) { // To avoid duplicates
-                edges.push_back({u, p->v, p->weight});
+            if (u < p->v) {
+                numEdges++;
             }
         }
     }
 
-    sortEdges(edges);
+    Edge* edges = new Edge[numEdges];
+    int edgeCount = 0;
+    for (int u = 0; u < numVertices; ++u) {
+        for (slistEl* p = adjList[u]; p != nullptr; p = p->next) {
+            if (u < p->v) {
+                edges[edgeCount++] = {u, p->v, p->weight};
+            }
+        }
+    }
+
+    mergeSort(edges, 0, edgeCount - 1);
 
     int *parent = new int[numVertices];
     int *rank = new int[numVertices];
@@ -150,19 +222,24 @@ int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
     }
 
     int mstWeight = 0;
-    mst.clear(); // Clear the mst vector
+    if (mst != nullptr) {
+        delete[] mst;
+    }
+    mst = new Edge[edgeCount];
+    mstSize = 0;
 
-    for (const Edge &edge : edges) {
-        int x = find(parent, edge.src);
-        int y = find(parent, edge.dest);
+    for (int i = 0; i < edgeCount; ++i) {
+        int x = find(parent, edges[i].src);
+        int y = find(parent, edges[i].dest);
 
         if (x != y) {
-            mstWeight += edge.weight;
+            mstWeight += edges[i].weight;
             Union(parent, rank, x, y);
-            mst.push_back(edge); // Store the edge in the MST
+            mst[mstSize++] = edges[i];
         }
     }
 
+    delete[] edges;
     delete[] parent;
     delete[] rank;
 
@@ -178,8 +255,9 @@ int Kruskal::AlgorithmCalculationFromList(slistEl **adjList, int numVertices) {
 void Kruskal::PrintResults(int mstWeight, double elapsed) {
     printf("Minimum Spanning Tree Weight: %d\n", mstWeight);
     printf("%-10s %-10s\n", "Edge", "Weight");
-    for (const auto& edge : mst)
-        printf("%-4d - %-4d \t%-4d\n", edge.src, edge.dest, edge.weight);
+    for (int i = 0; i < mstSize; ++i) {
+        printf("%-4d - %-4d \t%-4d\n", mst[i].src, mst[i].dest, mst[i].weight);
+    }
     printf("Elapsed time: %.3f ms\n", elapsed);
 }
 
@@ -191,12 +269,12 @@ void Kruskal::PrintResults(int mstWeight, double elapsed) {
  * @param numEdges The number of edges in the graph.
  */
 void Kruskal::TimeCounterMatrix(int **incMatrix, int numVertices, int numEdges) {
-    cout << "Give number of iterations: ";
+    printf("Give number of iterations: ");
     int iterations;
     float wholeTime = 0;
     float avgTime;
-    cin >> iterations;
-    cout << endl;
+    scanf("%d", &iterations);
+    printf("\n");
     for (int i = 0; i < iterations; i++) {
         auto start = chrono::high_resolution_clock::now();
         int mstWeight = AlgorithmCalculationFromMatrix(incMatrix, numVertices, numEdges);
